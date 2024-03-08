@@ -17,9 +17,8 @@ public partial class AndroidApiDbContext : DbContext
 
     public virtual DbSet<Article> Articles { get; set; }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Server=tcp:android-sql-server.database.windows.net;Database=AndroidApiDB;User ID=sql-server-root;Password=b33\"t2xVA!M~sed;Encrypt=True;TrustServerCertificate=False;");
+    public virtual DbSet<Author> Authors { get; set; }
+
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -33,14 +32,10 @@ public partial class AndroidApiDbContext : DbContext
                 .HasMaxLength(255)
                 .IsUnicode(false)
                 .HasColumnName("id");
-            entity.Property(e => e.Author)
+            entity.Property(e => e.AuthorId)
                 .HasMaxLength(255)
                 .IsUnicode(false)
-                .HasColumnName("author");
-            entity.Property(e => e.AuthorImageUrl)
-                .HasMaxLength(255)
-                .IsUnicode(false)
-                .HasColumnName("authorImageUrl");
+                .HasColumnName("author_id");
             entity.Property(e => e.Body)
                 .HasColumnType("text")
                 .HasColumnName("body");
@@ -64,6 +59,30 @@ public partial class AndroidApiDbContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("title");
             entity.Property(e => e.Views).HasColumnName("views");
+
+            entity.HasOne(d => d.Author).WithMany(p => p.Articles)
+                .HasForeignKey(d => d.AuthorId)
+                .HasConstraintName("FK_Article_Author");
+        });
+
+        modelBuilder.Entity<Author>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__Author__3213E83FCC380943");
+
+            entity.ToTable("Author");
+
+            entity.Property(e => e.Id)
+                .HasMaxLength(255)
+                .IsUnicode(false)
+                .HasColumnName("id");
+            entity.Property(e => e.ImageUrl)
+                .HasMaxLength(255)
+                .IsUnicode(false)
+                .HasColumnName("imageUrl");
+            entity.Property(e => e.Name)
+                .HasMaxLength(255)
+                .IsUnicode(false)
+                .HasColumnName("name");
         });
 
         OnModelCreatingPartial(modelBuilder);

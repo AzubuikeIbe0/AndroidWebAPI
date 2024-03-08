@@ -13,10 +13,6 @@ public partial class Article
 
     public string? Body { get; set; }
 
-    public string? Author { get; set; }
-
-    public string? AuthorImageUrl { get; set; }
-
     public string? Category { get; set; }
 
     public string? ImageUrl { get; set; }
@@ -24,4 +20,8 @@ public partial class Article
     public int? Views { get; set; }
 
     public DateTime? CreatedAt { get; set; }
+
+    public string? AuthorId { get; set; }
+
+    public virtual Author? Author { get; set; }
 }
